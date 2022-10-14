@@ -108,9 +108,14 @@ def build_scene(videopath, start_time, end_time):
                 re_scene_list[i] = []
         re_scene_list = [i for i in re_scene_list if i != []]
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'场景检测完成')
+
+    # 对除第一个cut_frame的第一个帧数+1
+    for i in range(1, len(re_scene_list)):
+        re_scene_list[i][0] += 1
+
     # 人声检测
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'人声检测优化...')
-    final_list = audio_adjust_to_scene_list(videopath, frame_per, re_scene_list)
+    final_list = audio_adjust_to_scene_list(videopath, frame_per, re_scene_list, start_frame=start_frame, end_frame=end_frame)
 
     return frame_per, final_list
 
@@ -157,9 +162,7 @@ def scene_cut_single(src_path,
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'开始检测场景')
     frame_per, cut_frame = build_scene(src_path, start_time, end_time)
 
-    # 对除第一个cut_frame的第一个帧数+1
-    for i in range(1, len(cut_frame)):
-        cut_frame[i][0] += 5
+    
 
     # cut frame转换为时间码00:00:00.00
     cut_time = []
@@ -187,4 +190,6 @@ def scene_cut_single(src_path,
         video.write_videofile(target_path + '/' + src_name + '_' + str(i) + '.mp4', bitrate=bitrate, codec=codec, fps=frame_per, 
                             audio_codec=audio_codec, audio_bitrate=audio_bitrate,  threads=cpu_num, preset=preset,
                             ffmpeg_params=['-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect', aspect])
+    
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'视频处理完成')
                             

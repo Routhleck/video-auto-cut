@@ -1,21 +1,22 @@
 from spleeter.separator import Separator
 from moviepy.editor import AudioFileClip
-from sklearn.cluster import KMeans
 import pydub
 import numpy as np
 import os
 import time
 
-def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = []):
+def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_frame = 0, end_frame = 0):
+    
     audio_path = 'temp/audioFile/temp.wav'
     out_path = 'temp/audioFile'
+    # 一段语音识别阈值(s)
+    threshold = 2
 
     # 将视频转换为音频
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'视频转音频...')
     audio = AudioFileClip(src_path)
-    # audio.write_audiofile(audio_path)
+    audio.write_audiofile(audio_path)
 
-    k_num = int(audio.duration / 2)
     audio.close()
     
     # 分离音频
@@ -35,46 +36,59 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = []):
     '''print('audio_len: ', len(audio))
     print('audio frame rate: ',audio.frame_rate)
     print('audio duration seconds', audio.duration_seconds)'''
+
+    left = 0
+    right = 0
+    isStart = 0
+    frame_count = 0
+
     # 使用pydub根据音频电平是否大于-32dB判断语音片段, 按视频的帧数进行迭代计算
     for i in range(0, len(audio), int(1000/ frame_per)):
         if audio[i:i + 1000/30].max_dBFS > -32:
-            audio_frame.append(i / 1000 * frame_per)
-    # os.remove(out_path + '/temp/vocals.wav')
-
-    k_num = int(len(audio_frame) / (frame_per * 2))
-
-    # print(audio_frame)
-
-    # 将audio_frame转化为视频的帧
-    audio_frame = np.array(audio_frame)
-
-    x = audio_frame.reshape(-1, 1)
-
-    # 将语音片段的帧数进行聚类
-    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'语音片段聚类分析...')
-    kmeans = KMeans(n_clusters=k_num, random_state=0).fit(x)
-
-    # 获取聚类的每个类别的范围
-    cluster_range = []
-    for i in range(k_num):
-        cluster_range.append([min(audio_frame[kmeans.labels_ == i]), max(audio_frame[kmeans.labels_ == i])])
-    # print(cluster_range)
-
-    # 将cluster_range 的每个第一个元素按照从小到大排序
-    cluster_range = sorted(cluster_range, key=lambda x: x[0])
-
-    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'修正片段')
-    # scene_i = 0
-    # 遍历所有cluster_range, 修正scene_list
-    for audio in cluster_range:
-        while(scene_i < len(scene_list)):
-            if audio[0] >= scene_list[i][0] and audio[1] > scene_list[i][1]:
-                scene_list[i][1] = audio[1] + 5
-                scene_list[i+1][0] = audio[1] + 6
-                scene_i = i + 1
-                break
+            if isStart == True:
+                frame_count = 0
+                left = i / 1000 * frame_per
+                right = i / 1000 * frame_per
+                isStart = False
+            else:
+                right = i / 1000 * frame_per
+        else:
+            if isStart == False:
+                frame_count += 1
+                if (frame_count > threshold * frame_per):
+                    audio_frame.append([left, right])
+                    frame_count = 0
+                    isStart = True
             else:
                 continue
+    # os.remove(out_path + '/temp/vocals.wav')
+
+    # 将re_scene_list中检查每个元素，如果元素的第一个值小于start_frame，第二个值大于end_frame，则将该元素删除
+    remove_list = []
+    for re_scene in audio_frame:
+        if re_scene[0] < start_frame or re_scene[1] > end_frame:
+            remove_list.append(re_scene)
+        else:
+            pass
+    
+    # 将remove_list中的元素从re_scene_list中删除
+    for i in remove_list:
+        audio_frame.remove(i)
+
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'修正片段')
+
+    print(audio_frame)
+
+    # 遍历所有audio_frame, 修正scene_list
+    last_fix = 0
+    for audio in audio_frame:
+        for i in range(last_fix, len(scene_list)):
+            if audio[0] >= scene_list[i][0] and audio[1] > scene_list[i][1]:
+                scene_list[i][1] = audio[1]
+                if i + 1 < len(scene_list):
+                    scene_list[i+1][0] = audio[1] + 1
+                last_fix = i + 1
+                break
     
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频优化完成')
     return scene_list
