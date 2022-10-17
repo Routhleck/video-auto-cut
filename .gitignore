@@ -33,3 +33,9 @@ temp/audioFile/temp/accompaniment.wav
 temp/audioFile/temp/vocals.pkf
 test/32集.mp4
 test/test.mp4
+cut_video/test_0.mp4
+cut_video/test_1.mp4
+cut_video/test_2.mp4
+cut_video/test_3.mp4
+cut_video/test_4.mp4
+*.mp4
