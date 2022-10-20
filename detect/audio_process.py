@@ -28,6 +28,7 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
     ui.label_condition_name.setText('音频分离')
     QApplication.processEvents()
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频分离...')
+    # separator禁用GPU
     separator = Separator('spleeter:2stems')
     separator.separate_to_file(audio_path, out_path, duration = audio.duration)
     audio.close()

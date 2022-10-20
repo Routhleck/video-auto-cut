@@ -4,15 +4,15 @@ from scenedetect.scene_manager import SceneManager
 from scenedetect.detectors import ContentDetector
 from scenedetect.stats_manager import StatsManager
 from moviepy.editor import VideoFileClip
-from moviepy.video.fx.all import resize, fadeout
-from moviepy.audio.fx.all import audio_fadeout
+from moviepy.video.fx.resize import resize
+from moviepy.video.fx.fadeout import fadeout
+from moviepy.audio.fx.audio_fadeout import audio_fadeout
 from detect.audio_process import audio_adjust_to_scene_list
 
 
 
 import cv2
 import os
-import speech_recognition as sr
 import time
 def frames_to_timecode(framerate,frames):
     """

@@ -1,3 +1,4 @@
+import multiprocessing
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtCore import QEventLoop, QTimer
@@ -79,6 +80,7 @@ class MyWidget(QtWidgets.QWidget):
         self.ui.output_text.ensureCursorVisible()
 
 if __name__ == "__main__":
+    multiprocessing.freeze_support()
     app = QtWidgets.QApplication([])
     widget = MyWidget()
     widget.show()
