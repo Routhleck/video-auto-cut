@@ -101,19 +101,12 @@ def build_scene(videopath, start_time, end_time, ui):
     ui.label_condition_name.setText('检测修正')
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'检测修正...')
     # 若re_scene_list不为空,
+    frame_per = cap.get(5)
     if re_scene_list:
-        # 视频帧数
-        frame_per = cap.get(5)
-        # 片段长度为90s到150s
-        min_len = frame_per * 90
-        max_len = frame_per * 150
-
+        
         # 将re_scene_list中的片段合并为符合min_len和max_len的片段
         for i in range(len(re_scene_list) - 1):
-            if re_scene_list[i][1] - re_scene_list[i][0] < min_len:
-                re_scene_list[i + 1][0] = re_scene_list[i][0]
-                re_scene_list[i] = []
-            elif re_scene_list[i][1] - re_scene_list[i][0] > max_len:
+            if re_scene_list[i][1] - re_scene_list[i][0] < 10:
                 re_scene_list[i + 1][0] = re_scene_list[i][0]
                 re_scene_list[i] = []
         re_scene_list = [i for i in re_scene_list if i != []]
@@ -132,6 +125,22 @@ def build_scene(videopath, start_time, end_time, ui):
     QApplication.processEvents()
     final_list = audio_adjust_to_scene_list(videopath, frame_per, re_scene_list, start_frame=start_frame, end_frame=end_frame, ui=ui)
 
+    if final_list:
+        # 视频帧数
+        frame_per = cap.get(5)
+        # 片段长度为60s到120s
+        min_len = frame_per * 60
+        max_len = frame_per * 120
+
+        # 将final_list中的片段合并为符合min_len和max_len的片段
+        for i in range(len(final_list) - 1):
+            if final_list[i][1] - final_list[i][0] < min_len:
+                final_list[i + 1][0] = final_list[i][0]
+                final_list[i] = []
+            elif final_list[i][1] - final_list[i][0] > max_len:
+                final_list[i + 1][0] = final_list[i][0]
+                final_list[i] = []
+        final_list = [i for i in final_list if i != []]
     return frame_per, final_list
 
 

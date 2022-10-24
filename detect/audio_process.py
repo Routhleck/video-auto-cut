@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QApplication
 from spleeter.separator import Separator
-from moviepy.editor import AudioFileClip
+from moviepy.editor import AudioFileClip, concatenate_audioclips
 import pydub
 import numpy as np
 import os
@@ -8,17 +8,35 @@ import time
 
 def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_frame = 0, end_frame = 0, ui = None):
     
-    audio_path = 'temp/audioFile/temp.wav'
+    # audio_path = 'temp/audioFile/temp.wav'
+    audio_path = 'temp/audioFile/'
     out_path = 'temp/audioFile'
     # 一段语音识别阈值(s)
-    threshold = 2
+    threshold = 1.5
 
     # 将视频转换为音频
     ui.label_condition_name.setText('视频转音频')
     QApplication.processEvents()
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'视频转音频...')
+    
+    # 按每段5分钟分割
     audio = AudioFileClip(src_path)
-    audio.write_audiofile(audio_path)
+    # 获取音频时长
+    audio_duration = audio.duration
+    # 5分钟一段分割
+    audio_segment = 5 * 60
+    # 分割后的音频数量
+    audio_segment_num = int(audio_duration / audio_segment)+1
+    for i in range(audio_segment_num):
+        print(i * audio_segment,'-' , (i + 1) * audio_segment)
+        if i == audio_segment_num - 1:
+            print(i * audio_segment,'-' , int(audio_duration))
+            audio.subclip(i*audio_segment, int(audio_duration)).write_audiofile(audio_path+str(i)+'.wav')
+        else:
+            audio.subclip(i * audio_segment, (i + 1) * audio_segment).write_audiofile(audio_path + str(i) + '.wav')
+    # audio.write_audiofile(audio_path)
+
+    
     ui.progressBar.setValue(40)
     QApplication.processEvents()
 
@@ -30,17 +48,32 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频分离...')
     # separator禁用GPU
     separator = Separator('spleeter:2stems')
-    separator.separate_to_file(audio_path, out_path, duration = audio.duration)
-    audio.close()
-    os.remove(audio_path)
+    for i in range(audio_segment_num):
+        separator.separate_to_file(audio_path + str(i) + '.wav', out_path + '/' + str(i), synchronous = True)
+        print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频片段', str(i),'分离完成')
+    # for i in range(audio_segment_num):
+        # os.remove(audio_path + str(i) + '.wav')
     ui.progressBar.setValue(45)
     QApplication.processEvents()
+
+    # 合并音频
+    ui.label_condition_name.setText('音频合并')
+    QApplication.processEvents()
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频合并...')
+    # 将分离的音频合并
+    audio_list = []
+    for i in range(audio_segment_num):
+        audio_list.append(AudioFileClip(out_path + '/' + str(i)+ '/' +str(i) + '/vocals.wav'))
+
+    audio = concatenate_audioclips(audio_list)
+    audio.write_audiofile(out_path + '/vocals.wav')
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频合并完成')
 
     # 语音片段的帧数
     audio_frame = []
 
     # 使用pydub读取分离出来的音频
-    audio = pydub.AudioSegment.from_wav(out_path + '/temp/vocals.wav')
+    audio = pydub.AudioSegment.from_wav(out_path + '/vocals.wav')
 
     ui.progressBar.setValue(47)
     ui.label_condition_name.setText('音频分析')
@@ -52,7 +85,7 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
 
     left = 0
     right = 0
-    isStart = 0
+    isStart = True
     frame_count = 0
 
     # 使用pydub根据音频电平是否大于-32dB判断语音片段, 按视频的帧数进行迭代计算
@@ -65,6 +98,7 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
                 isStart = False
             else:
                 right = i / 1000 * frame_per
+                frame_count = 0
         else:
             if isStart == False:
                 frame_count += 1
@@ -93,7 +127,11 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
     QApplication.processEvents()
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'修正片段')
 
-    print(audio_frame)
+    # 将audio_frame换算成秒
+    audio_frame_second = []
+    for i in audio_frame:
+        audio_frame_second.append([i[0]/frame_per, i[1]/frame_per])
+    print(audio_frame_second)
 
     # 遍历所有audio_frame, 修正scene_list
     last_fix = 0
