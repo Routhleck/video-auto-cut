@@ -1,3 +1,5 @@
+import random
+
 from PySide6.QtWidgets import QApplication
 from scenedetect.video_manager import VideoManager
 from scenedetect.scene_manager import SceneManager
@@ -221,6 +223,9 @@ def scene_cut_single(src_path,
         video.write_videofile(target_path + '/' + src_name + '_' + str(i) + '.mp4', bitrate=bitrate, codec=codec, fps=frame_per, 
                             audio_codec=audio_codec, audio_bitrate=audio_bitrate,  threads=cpu_num, preset=preset,
                             ffmpeg_params=['-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect', aspect])
+        # 随机截取一帧作为封面,保存为jpg
+        random_time = random.randint(0, int(video.duration*10))
+        video.save_frame(target_path + '/' + src_name + '_' + str(i) + '.jpg', t=random_time/10)
         ui.progressBar.setValue(50 + (i+1) * 50 / len(cut_frame))
         QApplication.processEvents()
     ui.progressBar.setValue(100)
