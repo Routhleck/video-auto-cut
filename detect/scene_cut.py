@@ -131,8 +131,8 @@ def build_scene(videopath, start_time, end_time, ui):
         # 视频帧数
         frame_per = cap.get(5)
         # 片段长度为60s到120s
-        min_len = frame_per * 60
-        max_len = frame_per * 120
+        min_len = frame_per * 90
+        max_len = frame_per * 150
 
         # 将final_list中的片段合并为符合min_len和max_len的片段
         for i in range(len(final_list) - 1):

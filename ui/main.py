@@ -16,14 +16,15 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFrame,
-    QGridLayout, QLabel, QProgressBar, QPushButton,
-    QSizePolicy, QTextEdit, QVBoxLayout, QWidget)
+    QGridLayout, QHBoxLayout, QLabel, QProgressBar,
+    QPushButton, QSizePolicy, QTextEdit, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWidget(object):
     def setupUi(self, MainWidget):
         if not MainWidget.objectName():
             MainWidget.setObjectName(u"MainWidget")
-        MainWidget.resize(1080, 778)
+        MainWidget.resize(1080, 810)
         self.widget_control = QWidget(MainWidget)
         self.widget_control.setObjectName(u"widget_control")
         self.widget_control.setGeometry(QRect(10, 20, 211, 201))
@@ -66,6 +67,7 @@ class Ui_MainWidget(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.label_mode = QLabel(self.widget_config)
         self.label_mode.setObjectName(u"label_mode")
+        self.label_mode.setFont(font1)
 
         self.gridLayout.addWidget(self.label_mode, 2, 0, 1, 1)
 
@@ -73,6 +75,7 @@ class Ui_MainWidget(object):
         self.comboBox_mode.addItem("")
         self.comboBox_mode.addItem("")
         self.comboBox_mode.setObjectName(u"comboBox_mode")
+        self.comboBox_mode.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_mode, 2, 1, 1, 1)
 
@@ -88,16 +91,19 @@ class Ui_MainWidget(object):
         self.comboBox_bitrate.addItem("")
         self.comboBox_bitrate.addItem("")
         self.comboBox_bitrate.setObjectName(u"comboBox_bitrate")
+        self.comboBox_bitrate.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_bitrate, 4, 1, 1, 1)
 
         self.label_bitrate = QLabel(self.widget_config)
         self.label_bitrate.setObjectName(u"label_bitrate")
+        self.label_bitrate.setFont(font1)
 
         self.gridLayout.addWidget(self.label_bitrate, 4, 0, 1, 1)
 
         self.label_scale = QLabel(self.widget_config)
         self.label_scale.setObjectName(u"label_scale")
+        self.label_scale.setFont(font1)
 
         self.gridLayout.addWidget(self.label_scale, 3, 0, 1, 1)
 
@@ -118,23 +124,27 @@ class Ui_MainWidget(object):
         self.comboBox_scale.addItem("")
         self.comboBox_scale.addItem("")
         self.comboBox_scale.setObjectName(u"comboBox_scale")
+        self.comboBox_scale.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_scale, 3, 1, 1, 1)
 
         self.label_src_path = QLabel(self.widget_config)
         self.label_src_path.setObjectName(u"label_src_path")
+        self.label_src_path.setFont(font1)
         self.label_src_path.setWordWrap(True)
 
         self.gridLayout.addWidget(self.label_src_path, 1, 0, 1, 2)
 
         self.label_target_path = QLabel(self.widget_config)
         self.label_target_path.setObjectName(u"label_target_path")
+        self.label_target_path.setFont(font1)
         self.label_target_path.setWordWrap(True)
 
         self.gridLayout.addWidget(self.label_target_path, 1, 2, 1, 2)
 
         self.label_audio_bitrate = QLabel(self.widget_config)
         self.label_audio_bitrate.setObjectName(u"label_audio_bitrate")
+        self.label_audio_bitrate.setFont(font1)
 
         self.gridLayout.addWidget(self.label_audio_bitrate, 2, 2, 1, 1)
 
@@ -144,11 +154,13 @@ class Ui_MainWidget(object):
         self.comboBox_audio_bitrate.addItem("")
         self.comboBox_audio_bitrate.addItem("")
         self.comboBox_audio_bitrate.setObjectName(u"comboBox_audio_bitrate")
+        self.comboBox_audio_bitrate.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_audio_bitrate, 2, 3, 1, 1)
 
         self.label_audio_codec = QLabel(self.widget_config)
         self.label_audio_codec.setObjectName(u"label_audio_codec")
+        self.label_audio_codec.setFont(font1)
 
         self.gridLayout.addWidget(self.label_audio_codec, 3, 2, 1, 1)
 
@@ -157,11 +169,13 @@ class Ui_MainWidget(object):
         self.comboBox_audio_codec.addItem("")
         self.comboBox_audio_codec.addItem("")
         self.comboBox_audio_codec.setObjectName(u"comboBox_audio_codec")
+        self.comboBox_audio_codec.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_audio_codec, 3, 3, 1, 1)
 
         self.label_preset = QLabel(self.widget_config)
         self.label_preset.setObjectName(u"label_preset")
+        self.label_preset.setFont(font1)
 
         self.gridLayout.addWidget(self.label_preset, 4, 2, 1, 1)
 
@@ -176,6 +190,7 @@ class Ui_MainWidget(object):
         self.comboBox_preset.addItem("")
         self.comboBox_preset.addItem("")
         self.comboBox_preset.setObjectName(u"comboBox_preset")
+        self.comboBox_preset.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_preset, 4, 3, 1, 1)
 
@@ -216,6 +231,7 @@ class Ui_MainWidget(object):
         self.doubleSpinBox_start_time.setObjectName(u"doubleSpinBox_start_time")
         self.doubleSpinBox_start_time.setFont(font1)
         self.doubleSpinBox_start_time.setDecimals(1)
+        self.doubleSpinBox_start_time.setMaximum(1000.000000000000000)
         self.doubleSpinBox_start_time.setValue(0.000000000000000)
 
         self.gridLayout_2.addWidget(self.doubleSpinBox_start_time, 1, 1, 1, 1)
@@ -230,6 +246,7 @@ class Ui_MainWidget(object):
         self.doubleSpinBox_end_time.setObjectName(u"doubleSpinBox_end_time")
         self.doubleSpinBox_end_time.setFont(font1)
         self.doubleSpinBox_end_time.setDecimals(1)
+        self.doubleSpinBox_end_time.setMaximum(1000.000000000000000)
         self.doubleSpinBox_end_time.setValue(0.000000000000000)
 
         self.gridLayout_2.addWidget(self.doubleSpinBox_end_time, 1, 3, 1, 1)
@@ -267,7 +284,7 @@ class Ui_MainWidget(object):
 
         self.widget_process = QWidget(MainWidget)
         self.widget_process.setObjectName(u"widget_process")
-        self.widget_process.setGeometry(QRect(10, 570, 1061, 201))
+        self.widget_process.setGeometry(QRect(10, 610, 1061, 201))
         self.widget_process.setStyleSheet(u"background-color: rgba(255, 255, 255, 0.4)")
         self.gridLayout_3 = QGridLayout(self.widget_process)
         self.gridLayout_3.setObjectName(u"gridLayout_3")
@@ -275,36 +292,36 @@ class Ui_MainWidget(object):
         self.progressBar.setObjectName(u"progressBar")
         self.progressBar.setValue(0)
 
-        self.gridLayout_3.addWidget(self.progressBar, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.progressBar, 1, 0, 1, 1)
 
         self.output_text = QTextEdit(self.widget_process)
         self.output_text.setObjectName(u"output_text")
 
-        self.gridLayout_3.addWidget(self.output_text, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.output_text, 2, 0, 1, 1)
 
         self.widget_condition = QWidget(MainWidget)
         self.widget_condition.setObjectName(u"widget_condition")
-        self.widget_condition.setGeometry(QRect(10, 220, 211, 341))
+        self.widget_condition.setGeometry(QRect(220, 560, 851, 51))
         font3 = QFont()
         font3.setFamilies([u"\u9ed1\u4f53"])
         font3.setPointSize(20)
         self.widget_condition.setFont(font3)
         self.widget_condition.setStyleSheet(u"background-color: rgba(255, 255, 255, 0.4)")
-        self.gridLayout_4 = QGridLayout(self.widget_condition)
-        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.horizontalLayout = QHBoxLayout(self.widget_condition)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.label_condition = QLabel(self.widget_condition)
         self.label_condition.setObjectName(u"label_condition")
         self.label_condition.setFont(font)
         self.label_condition.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_4.addWidget(self.label_condition, 0, 0, 1, 1)
+        self.horizontalLayout.addWidget(self.label_condition)
 
         self.label_condition_name = QLabel(self.widget_condition)
         self.label_condition_name.setObjectName(u"label_condition_name")
         self.label_condition_name.setFont(font)
         self.label_condition_name.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_4.addWidget(self.label_condition_name, 1, 0, 1, 1)
+        self.horizontalLayout.addWidget(self.label_condition_name)
 
 
         self.retranslateUi(MainWidget)
@@ -377,7 +394,11 @@ class Ui_MainWidget(object):
         self.label_start_time.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u5f00\u5934\u65f6\u95f4", None))
         self.label_effect_config.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u6548\u679c\u8bbe\u7f6e", None))
         self.doubleSpinBox_start_time.setPrefix("")
+        self.doubleSpinBox_start_time.setSuffix(QCoreApplication.translate("MainWidget", u"s", None))
         self.label_end_time.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u7ed3\u5c3e\u65f6\u95f4", None))
+        self.doubleSpinBox_end_time.setSuffix(QCoreApplication.translate("MainWidget", u"s", None))
+        self.doubleSpinBox_video_fade_time.setSuffix(QCoreApplication.translate("MainWidget", u"s", None))
+        self.doubleSpinBox_audio_fade_time.setSuffix(QCoreApplication.translate("MainWidget", u"s", None))
         self.label_scale_size.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u7f29\u653e\u500d\u7387", None))
         self.doubleSpinBox_scale_size.setPrefix("")
         self.doubleSpinBox_scale_size.setSuffix(QCoreApplication.translate("MainWidget", u"%", None))
