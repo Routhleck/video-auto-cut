@@ -104,7 +104,57 @@ def get_scene_list(videopath, start_time, end_time, ui):
     print(time.strftime('%H:%M:%S', time.localtime(time.time())), '检测修正...')
     # 若re_scene_list不为空,
     frame_per = cap.get(5)
+
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())), '场景检测完成')
+    ui.progressBar.setValue(35)
+    ui.label_condition_name.setText('场景检测完成')
+    QApplication.processEvents()
+
     return re_scene_list, frame_per, start_frame, end_frame
+
+# 将scene_list与audio_list合并优化
+def optimize_scene_with_audio(scene_list, audio_list, frame_per):
+    # 按audio_frame, 将scene_list合并
+    min_len = 110 * frame_per
+    max_len = 170 * frame_per
+
+    first_flag = True
+    new_scene_list = []
+    new_scene = [0,0]
+    for scene in scene_list:
+        if new_scene[1] - new_scene[0] > min_len:
+            for audio in audio_list:
+                if new_scene[0] >= audio[0] and new_scene[1] < audio[1]:
+                    pass
+                elif new_scene[0] >= audio[1] or new_scene[1] < audio[0]:
+                    pass
+                elif new_scene[0] < audio[0] and new_scene[1] < audio[1]:
+                    new_scene[1] = audio[1] + 1 * frame_per
+                    new_scene_list.append(new_scene)
+                    temp_scene = new_scene
+                    new_scene = [temp_scene[1], temp_scene[1]]
+                    break
+                if audio == audio_list[-1]:
+                    new_scene_list.append(new_scene)
+                    temp_scene = new_scene
+                    new_scene = [temp_scene[1], temp_scene[1]]
+        elif scene == scene_list[-1]:
+            new_scene[1] = scene[1]
+            new_scene_list.append(new_scene)
+        else:
+            if first_flag:
+                new_scene = scene
+                first_flag = False
+            else:
+                if new_scene[1] > scene[1]:
+                    pass
+                else:
+                    new_scene[1] = scene[1]
+
+    print('新序列: ',new_scene_list)
+
+    return new_scene_list
+
 
 def build_scene(videopath, start_time, end_time, ui):
     re_scene_list, frame_per, start_frame, end_frame = get_scene_list(videopath, start_time, end_time, ui)
@@ -116,22 +166,16 @@ def build_scene(videopath, start_time, end_time, ui):
                 re_scene_list[i + 1][0] = re_scene_list[i][0]
                 re_scene_list[i] = []
         re_scene_list = [i for i in re_scene_list if i != []]
-    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'场景检测完成')
-    ui.progressBar.setValue(35)
-    ui.label_condition_name.setText('场景检测完成')
-    QApplication.processEvents()
-
-    # 对除第一个cut_frame的第一个帧数+1
-    for i in range(1, len(re_scene_list)):
-        re_scene_list[i][0] += 1
 
     # 人声检测
     print(time.strftime('%H:%M:%S', time.localtime(time.time())),'人声检测优化...')
     ui.label_condition_name.setText('人声检测优化')
     QApplication.processEvents()
-    final_list = audio_adjust_to_scene_list(videopath, frame_per, re_scene_list, start_frame=start_frame, end_frame=end_frame, ui=ui)
 
-    if final_list:
+    audio_list = audio_adjust_to_scene_list(videopath, frame_per,  start_frame=start_frame, end_frame=end_frame, ui=ui)
+
+    final_list = optimize_scene_with_audio(re_scene_list, audio_list, frame_per)
+    '''if final_list:
         # 视频帧数
         frame_per = cap.get(5)
         # 片段长度为60s到120s
@@ -146,7 +190,7 @@ def build_scene(videopath, start_time, end_time, ui):
             elif final_list[i][1] - final_list[i][0] > max_len:
                 final_list[i + 1][0] = final_list[i][0]
                 final_list[i] = []
-        final_list = [i for i in final_list if i != []]
+        final_list = [i for i in final_list if i != []]'''
     return frame_per, final_list
 
 

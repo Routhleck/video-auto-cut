@@ -6,13 +6,13 @@ import numpy as np
 import os
 import time
 
-def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_frame = 0, end_frame = 0, ui = None):
+def audio_adjust_to_scene_list(src_path, frame_per = 25, start_frame = 0, end_frame = 0, ui = None):
     
     # audio_path = 'temp/audioFile/temp.wav'
     audio_path = 'temp/audioFile/'
     out_path = 'temp/audioFile'
     # 一段语音识别阈值(s)
-    threshold = 1.5
+    threshold = 2
 
     # 将视频转换为音频
     ui.label_condition_name.setText('视频转音频')
@@ -30,6 +30,9 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
     for i in range(audio_segment_num):
         print(i * audio_segment,'-' , (i + 1) * audio_segment)
         if i == audio_segment_num - 1:
+            if audio_segment * i == int(audio_duration):
+                audio_segment_num = audio_segment_num - 1
+                break
             print(i * audio_segment,'-' , int(audio_duration))
             audio.subclip(i*audio_segment, int(audio_duration)).write_audiofile(audio_path+str(i)+'.wav')
         else:
@@ -90,7 +93,7 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
 
     # 使用pydub根据音频电平是否大于-32dB判断语音片段, 按视频的帧数进行迭代计算
     for i in range(0, len(audio), int(1000/ frame_per)):
-        if audio[i:i + 1000/30].max_dBFS > -32:
+        if audio[i:i + 1000/30].max_dBFS > -28:
             if isStart == True:
                 frame_count = 0
                 left = i / 1000 * frame_per
@@ -131,24 +134,72 @@ def audio_adjust_to_scene_list(src_path, frame_per = 25, scene_list = [], start_
     audio_frame_second = []
     for i in audio_frame:
         audio_frame_second.append([i[0]/frame_per, i[1]/frame_per])
-    print(audio_frame_second)
+    print('原始音频片段：', audio_frame_second)
+    return audio_frame
 
-    # 遍历所有audio_frame, 修正scene_list
+    '''# 将audio_frame转换为其空缺的补集
+    audio_frame_complement = []
+    for i in range(len(audio_frame)):
+        if i == 0:
+            audio_frame_complement.append([0, audio_frame[i][0]])
+        else:
+            audio_frame_complement.append([audio_frame[i - 1][1], audio_frame[i][0]])
+
+    audio_frame_seq = []
+    # 从第二个元素开始，求第1个元素与第2个元素的平均值
+    for i in range(1, len(audio_frame_complement)):
+        audio_frame_seq.append(int((audio_frame_complement[i][0] + audio_frame_complement[i][1]) / 2))
+    audio_frame_second = []
+    for i in audio_frame_seq:
+        audio_frame_second.append(i / frame_per)
+    print('音频修正:', audio_frame_second)
+
+    '''
+    '''# 遍历audio_frame_seq,修正scene_list
     last_fix = 0
-    for audio in audio_frame:
-        for i in range(last_fix, len(scene_list)):
-            if audio[0] >= scene_list[i][0] and audio[1] > scene_list[i][1]:
-                scene_list[i][1] = audio[1]
-                if i + 1 < len(scene_list):
-                    scene_list[i+1][0] = audio[1] + 1
-                last_fix = i + 1
+    for i in range(len(audio_frame_seq)):
+        for j in range(last_fix, len(scene_list)):
+            if scene_list[j][0] < audio_frame_seq[i] and scene_list[j][1] > audio_frame_seq[i]:
+                scene_list[j][1] = audio_frame_seq[i]
+                scene_list[j+1][0] = audio_frame_seq[i]+1
+                last_fix = j
                 break
+            else:
+                pass'''
+    '''
 
-    ui.progressBar.setValue(50)
-    ui.label_condition_name.setText('音频优化完成')
-    QApplication.processEvents()
-    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'音频优化完成')
-    return scene_list
+    audio_frame_second = []
+    for i in scene_list:
+        audio_frame_second.append([i[0] / frame_per, i[1] / frame_per])
+    print('场景修正:', audio_frame_second)
+
+    last_fix = 0
+    expand_flag = False
+    for i in range(len(audio_frame) - 1):
+        for j in range(last_fix, len(scene_list)):
+            if audio_frame[i][0] >= scene_list[j][0] and audio_frame[i][1] > scene_list[j][1]:
+                expand_flag = False
+                scene_list[j][1] = audio_frame_seq[i]
+                for k in range(j + 1, len(scene_list)):
+                    if scene_list[k][0] > audio_frame_seq[i]:
+                        scene_list[k][0] = audio_frame_seq[i] + 1
+                        last_fix = k
+                        expand_flag = True
+                        break
+                    else:
+                        scene_list[k] = [0, 0]
+
+                if j + 1 < len(scene_list):
+                    scene_list = [i for i in scene_list if i != [0, 0]]
+                    ui.progressBar.setValue(50)
+                    ui.label_condition_name.setText('音频优化完成')
+                    QApplication.processEvents()
+                    print(time.strftime('%H:%M:%S', time.localtime(time.time())), '音频优化完成')
+                    return scene_list
+                if not expand_flag:
+                    last_fix = j
+                break
+    '''
     '''# 将src_path中的音频按10分钟一段提取出来
     audio = AudioFileClip(src_path)
     audio_duration = audio.duration
