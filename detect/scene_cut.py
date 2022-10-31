@@ -28,7 +28,7 @@ def frames_to_timecode(framerate,frames):
                                                     int(frames / framerate % 60),
                                                     int(frames % framerate))
 
-def build_scene(videopath, start_time, end_time, ui):
+def get_scene_list(videopath, start_time, end_time, ui):
     # 定义re_scene_list 为视频切分场景的列表结果
     re_scene_list = []
     cap = cv2.VideoCapture(videopath)
@@ -79,13 +79,13 @@ def build_scene(videopath, start_time, end_time, ui):
                 re_scene_list.append([scene[0].get_frames(), scene[1].get_frames()])
         else:
             re_scene_list.append([0, frames_num])
-        
+
     finally:
         video_manager.release()
 
     ui.label_condition_name.setText('场景检测完成')
     QApplication.processEvents()
-    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'场景检测完成')
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())), '场景检测完成')
     # 将re_scene_list中检查每个元素，如果元素的第一个值小于start_frame，第二个值大于end_frame，则将该元素删除
     remove_list = []
     for re_scene in re_scene_list:
@@ -93,7 +93,7 @@ def build_scene(videopath, start_time, end_time, ui):
             remove_list.append(re_scene)
         else:
             pass
-    
+
     # 将remove_list中的元素从re_scene_list中删除
     for i in remove_list:
         re_scene_list.remove(i)
@@ -101,9 +101,13 @@ def build_scene(videopath, start_time, end_time, ui):
     ui.progressBar.setValue(30)
     QApplication.processEvents()
     ui.label_condition_name.setText('检测修正')
-    print(time.strftime('%H:%M:%S', time.localtime(time.time())),'检测修正...')
+    print(time.strftime('%H:%M:%S', time.localtime(time.time())), '检测修正...')
     # 若re_scene_list不为空,
     frame_per = cap.get(5)
+    return re_scene_list, frame_per, start_frame, end_frame
+
+def build_scene(videopath, start_time, end_time, ui):
+    re_scene_list, frame_per, start_frame, end_frame = get_scene_list(videopath, start_time, end_time, ui)
     if re_scene_list:
         
         # 将re_scene_list中的片段合并为符合min_len和max_len的片段
