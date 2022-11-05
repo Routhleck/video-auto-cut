@@ -85,7 +85,7 @@
      <x>220</x>
      <y>20</y>
      <width>851</width>
-     <height>301</height>
+     <height>361</height>
     </rect>
    </property>
    <property name="font">
@@ -131,6 +131,19 @@
       </item>
      </widget>
     </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_scale">
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>视频尺寸</string>
+      </property>
+     </widget>
+    </item>
     <item row="4" column="1">
      <widget class="QComboBox" name="comboBox_bitrate">
       <property name="font">
@@ -140,10 +153,10 @@
        </font>
       </property>
       <property name="currentText">
-       <string>4000kbps</string>
+       <string>6000kbps</string>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>5</number>
       </property>
       <item>
        <property name="text">
@@ -210,19 +223,6 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_scale">
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>视频尺寸</string>
-      </property>
-     </widget>
-    </item>
     <item row="0" column="0" colspan="4">
      <widget class="QLabel" name="label_config">
       <property name="font">
@@ -245,45 +245,6 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QComboBox" name="comboBox_scale">
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="currentIndex">
-       <number>0</number>
-      </property>
-      <item>
-       <property name="text">
-        <string>1920×1080</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>1280×720</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-    <item row="1" column="0" colspan="2">
-     <widget class="QLabel" name="label_src_path">
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>选择视频路径:</string>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -313,6 +274,58 @@
       </property>
       <property name="text">
        <string>音频比特率</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QLabel" name="label_src_path">
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>选择视频路径:</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QComboBox" name="comboBox_scale">
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>1920×1080</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>1280×720</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QLabel" name="label_audio_codec">
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>音频编码格式</string>
       </property>
      </widget>
     </item>
@@ -347,19 +360,6 @@
         <string>512k</string>
        </property>
       </item>
-     </widget>
-    </item>
-    <item row="3" column="2">
-     <widget class="QLabel" name="label_audio_codec">
-      <property name="font">
-       <font>
-        <family>黑体</family>
-        <pointsize>14</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>音频编码格式</string>
-      </property>
      </widget>
     </item>
     <item row="3" column="3">
@@ -458,15 +458,51 @@
       </item>
      </widget>
     </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_bitrate_encode">
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>比特率编码格式</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QComboBox" name="comboBox_bitrate_encode">
+      <property name="font">
+       <font>
+        <family>黑体</family>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <item>
+       <property name="text">
+        <string>CBR4.1</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>VBR</string>
+       </property>
+      </item>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QWidget" name="widget_effect_config" native="true">
    <property name="geometry">
     <rect>
      <x>220</x>
-     <y>320</y>
+     <y>380</y>
      <width>851</width>
-     <height>241</height>
+     <height>181</height>
     </rect>
    </property>
    <property name="font">
@@ -748,6 +784,57 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="widget_output" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>230</y>
+     <width>201</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(255, 255, 255, 0.4)</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>输出设置</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <widget class="QRadioButton" name="radioButton_out_name">
+      <property name="text">
+       <string>原视频名+序号</string>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0" colspan="2">
+     <widget class="QRadioButton" name="radioButton_out_num">
+      <property name="text">
+       <string>序号</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

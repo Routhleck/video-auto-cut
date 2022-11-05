@@ -209,7 +209,9 @@ def scene_cut_single(src_path,
                 aspect = '16:9',
                 resize_value = 1.05,
                 start_time = 0,
-                end_time = 0
+                end_time = 0,
+                out_format = 'num',
+                bitrate_encode = 'CBR4.1'
                 ):
     """
     单视频切割
@@ -260,20 +262,68 @@ def scene_cut_single(src_path,
         # 切割视频
         video = video.subclip(cut_time[i][0], cut_time[i][1])
 
-        # 画面等比放大105%
-        video = video.fx(resize, resize_value)
 
-        # 结尾画面渐隐，声音渐隐
-        video = video.fx(fadeout, fadeout_time)
-        video = video.fx(audio_fadeout, audio_fadeout_time)
+        if out_format == 'num':
+            random_time = random.randint(0, int(video.duration * 10))
+            # 随机截取一帧作为封面,保存为1080p的jpg
+            video_frame = video.get_frame(random_time / 10)
+            video_frame = cv2.cvtColor(video_frame, cv2.COLOR_BGR2RGB)
+            video_frame = cv2.resize(video_frame, (1920, 1080))
+            cv2.imwrite(target_path + '/' + str(i) + '.jpg', video_frame)
+            # video.save_frame(target_path + '/' + str(i) + '.jpg', t=random_time / 10)
 
-        # 视频比特率为4000kbps以上，使用CBR4.1编码，1080p，16:9
-        video.write_videofile(target_path + '/' + src_name + '_' + str(i) + '.mp4', bitrate=bitrate, codec=codec, fps=frame_per, 
+            # 画面等比放大105%
+            video = video.fx(resize, resize_value)
+
+            # 结尾画面渐隐，声音渐隐
+            video = video.fx(fadeout, fadeout_time)
+            video = video.fx(audio_fadeout, audio_fadeout_time)
+
+            if bitrate_encode == 'CBR4.1':
+                ffmpeg_params = ['-profile:v', 'high', '-level', '4.1', '-minrate', bitrate, '-maxrate', bitrate,
+                                 '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect', aspect]
+            elif bitrate_encode == 'VBR':
+                ffmpeg_params = ['-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect',
+                                 aspect]
+            # 输出视频
+            video.write_videofile(target_path+ '/' + str(i) + '.mp4',
+                                codec = codec,
+                                bitrate = bitrate,
+                                fps=frame_per,
+                                audio_codec = audio_codec,
+                                audio_bitrate = audio_bitrate,
+                                preset = preset,
+                                threads = cpu_num,
+                                ffmpeg_params=ffmpeg_params)
+
+
+        elif out_format == 'name':
+            random_time = random.randint(0, int(video.duration * 10))
+            # 随机截取一帧作为封面,保存为1080p的jpg
+            video_frame = video.get_frame(random_time / 10)
+            video_frame = cv2.cvtColor(video_frame, cv2.COLOR_BGR2RGB)
+            video_frame = cv2.resize(video_frame, (1920, 1080))
+            cv2.imwrite(target_path + '/' + src_name + '_' + str(i) + '.jpg', video_frame)
+            # video.save_frame(target_path + '/' + src_name + '_' + str(i) + '.jpg', t=random_time / 10)
+
+            # 画面等比放大105%
+            video = video.fx(resize, resize_value)
+
+            # 结尾画面渐隐，声音渐隐
+            video = video.fx(fadeout, fadeout_time)
+            video = video.fx(audio_fadeout, audio_fadeout_time)
+
+            if bitrate_encode == 'CBR4.1':
+                ffmpeg_params = ['-profile:v', 'high', '-level', '4.1', '-minrate', bitrate, '-maxrate', bitrate,
+                                 '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect', aspect]
+            elif bitrate_encode == 'VBR':
+                ffmpeg_params = ['-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect',
+                                 aspect]
+            # 视频比特率为4000kbps以上，使用CBR4.1编码，1080p，16:9
+            video.write_videofile(target_path + '/' + src_name + '_' + str(i) + '.mp4', bitrate=bitrate, codec=codec, fps=frame_per,
                             audio_codec=audio_codec, audio_bitrate=audio_bitrate,  threads=cpu_num, preset=preset,
-                            ffmpeg_params=['-profile:v', 'high', '-level', '4.1', '-pix_fmt', 'yuv420p', '-vf', scale, '-aspect', aspect])
-        # 随机截取一帧作为封面,保存为jpg
-        random_time = random.randint(0, int(video.duration*10))
-        video.save_frame(target_path + '/' + src_name + '_' + str(i) + '.jpg', t=random_time/10)
+                            ffmpeg_params=ffmpeg_params)
+
         ui.progressBar.setValue(50 + (i+1) * 50 / len(cut_frame))
         QApplication.processEvents()
     ui.progressBar.setValue(100)

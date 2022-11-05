@@ -60,16 +60,21 @@ class MyWidget(QtWidgets.QWidget):
             self.ui.button_detect.setEnabled(True)
 
     def video_process(self):
-        video_scale, video_bitrate, audio_bitrate, audio_codec, preset = get_para(self.ui)
+        video_scale, video_bitrate, audio_bitrate, audio_codec, preset, bitrate_encode = get_para(self.ui)
         start_time = self.ui.doubleSpinBox_start_time.value()
         end_time = self.ui.doubleSpinBox_end_time.value()
         video_fade_time = self.ui.doubleSpinBox_video_fade_time.value()
         audio_fade_time = self.ui.doubleSpinBox_audio_fade_time.value()
         scale_size = float(self.ui.doubleSpinBox_scale_size.value())/100
+        if self.ui.radioButton_out_name.isChecked():
+            out_format = 'name'
+        elif self.ui.radioButton_out_num.isChecked():
+            out_format = 'num'
         self.ui.progressBar.setValue(0)
         scene_cut_single(src_path=src_path, target_path=target_path,ui=self.ui, fadeout_time= video_fade_time
-                         ,audio_fadeout_time=audio_fade_time, bitrate=video_bitrate, audio_bitrate=audio_bitrate
-                         , audio_codec=audio_codec, preset=preset, scale=video_scale, start_time=start_time, end_time=end_time,resize_value=scale_size)
+                         , audio_fadeout_time=audio_fade_time, bitrate=video_bitrate, audio_bitrate=audio_bitrate
+                         , audio_codec=audio_codec, preset=preset, scale=video_scale, start_time=start_time, end_time=end_time,resize_value=scale_size
+                         , out_format=out_format, bitrate_encode=bitrate_encode)
 
     def outputWritten(self, text):
         # self.edt_log.clear()

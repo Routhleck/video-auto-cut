@@ -17,8 +17,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QComboBox, QDoubleSpinBox, QFrame,
     QGridLayout, QHBoxLayout, QLabel, QProgressBar,
-    QPushButton, QSizePolicy, QTextEdit, QVBoxLayout,
-    QWidget)
+    QPushButton, QRadioButton, QSizePolicy, QTextEdit,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWidget(object):
     def setupUi(self, MainWidget):
@@ -57,7 +57,7 @@ class Ui_MainWidget(object):
 
         self.widget_config = QWidget(MainWidget)
         self.widget_config.setObjectName(u"widget_config")
-        self.widget_config.setGeometry(QRect(220, 20, 851, 301))
+        self.widget_config.setGeometry(QRect(220, 20, 851, 361))
         font1 = QFont()
         font1.setFamilies([u"\u9ed1\u4f53"])
         font1.setPointSize(14)
@@ -78,6 +78,12 @@ class Ui_MainWidget(object):
         self.comboBox_mode.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_mode, 2, 1, 1, 1)
+
+        self.label_scale = QLabel(self.widget_config)
+        self.label_scale.setObjectName(u"label_scale")
+        self.label_scale.setFont(font1)
+
+        self.gridLayout.addWidget(self.label_scale, 3, 0, 1, 1)
 
         self.comboBox_bitrate = QComboBox(self.widget_config)
         self.comboBox_bitrate.addItem("")
@@ -101,12 +107,6 @@ class Ui_MainWidget(object):
 
         self.gridLayout.addWidget(self.label_bitrate, 4, 0, 1, 1)
 
-        self.label_scale = QLabel(self.widget_config)
-        self.label_scale.setObjectName(u"label_scale")
-        self.label_scale.setFont(font1)
-
-        self.gridLayout.addWidget(self.label_scale, 3, 0, 1, 1)
-
         self.label_config = QLabel(self.widget_config)
         self.label_config.setObjectName(u"label_config")
         font2 = QFont()
@@ -119,21 +119,6 @@ class Ui_MainWidget(object):
         self.label_config.setAlignment(Qt.AlignCenter)
 
         self.gridLayout.addWidget(self.label_config, 0, 0, 1, 4)
-
-        self.comboBox_scale = QComboBox(self.widget_config)
-        self.comboBox_scale.addItem("")
-        self.comboBox_scale.addItem("")
-        self.comboBox_scale.setObjectName(u"comboBox_scale")
-        self.comboBox_scale.setFont(font1)
-
-        self.gridLayout.addWidget(self.comboBox_scale, 3, 1, 1, 1)
-
-        self.label_src_path = QLabel(self.widget_config)
-        self.label_src_path.setObjectName(u"label_src_path")
-        self.label_src_path.setFont(font1)
-        self.label_src_path.setWordWrap(True)
-
-        self.gridLayout.addWidget(self.label_src_path, 1, 0, 1, 2)
 
         self.label_target_path = QLabel(self.widget_config)
         self.label_target_path.setObjectName(u"label_target_path")
@@ -148,6 +133,27 @@ class Ui_MainWidget(object):
 
         self.gridLayout.addWidget(self.label_audio_bitrate, 2, 2, 1, 1)
 
+        self.label_src_path = QLabel(self.widget_config)
+        self.label_src_path.setObjectName(u"label_src_path")
+        self.label_src_path.setFont(font1)
+        self.label_src_path.setWordWrap(True)
+
+        self.gridLayout.addWidget(self.label_src_path, 1, 0, 1, 2)
+
+        self.comboBox_scale = QComboBox(self.widget_config)
+        self.comboBox_scale.addItem("")
+        self.comboBox_scale.addItem("")
+        self.comboBox_scale.setObjectName(u"comboBox_scale")
+        self.comboBox_scale.setFont(font1)
+
+        self.gridLayout.addWidget(self.comboBox_scale, 3, 1, 1, 1)
+
+        self.label_audio_codec = QLabel(self.widget_config)
+        self.label_audio_codec.setObjectName(u"label_audio_codec")
+        self.label_audio_codec.setFont(font1)
+
+        self.gridLayout.addWidget(self.label_audio_codec, 3, 2, 1, 1)
+
         self.comboBox_audio_bitrate = QComboBox(self.widget_config)
         self.comboBox_audio_bitrate.addItem("")
         self.comboBox_audio_bitrate.addItem("")
@@ -157,12 +163,6 @@ class Ui_MainWidget(object):
         self.comboBox_audio_bitrate.setFont(font1)
 
         self.gridLayout.addWidget(self.comboBox_audio_bitrate, 2, 3, 1, 1)
-
-        self.label_audio_codec = QLabel(self.widget_config)
-        self.label_audio_codec.setObjectName(u"label_audio_codec")
-        self.label_audio_codec.setFont(font1)
-
-        self.gridLayout.addWidget(self.label_audio_codec, 3, 2, 1, 1)
 
         self.comboBox_audio_codec = QComboBox(self.widget_config)
         self.comboBox_audio_codec.addItem("")
@@ -194,9 +194,23 @@ class Ui_MainWidget(object):
 
         self.gridLayout.addWidget(self.comboBox_preset, 4, 3, 1, 1)
 
+        self.label_bitrate_encode = QLabel(self.widget_config)
+        self.label_bitrate_encode.setObjectName(u"label_bitrate_encode")
+        self.label_bitrate_encode.setFont(font1)
+
+        self.gridLayout.addWidget(self.label_bitrate_encode, 5, 0, 1, 1)
+
+        self.comboBox_bitrate_encode = QComboBox(self.widget_config)
+        self.comboBox_bitrate_encode.addItem("")
+        self.comboBox_bitrate_encode.addItem("")
+        self.comboBox_bitrate_encode.setObjectName(u"comboBox_bitrate_encode")
+        self.comboBox_bitrate_encode.setFont(font1)
+
+        self.gridLayout.addWidget(self.comboBox_bitrate_encode, 5, 1, 1, 1)
+
         self.widget_effect_config = QWidget(MainWidget)
         self.widget_effect_config.setObjectName(u"widget_effect_config")
-        self.widget_effect_config.setGeometry(QRect(220, 320, 851, 241))
+        self.widget_effect_config.setGeometry(QRect(220, 380, 851, 181))
         self.widget_effect_config.setFont(font1)
         self.widget_effect_config.setStyleSheet(u"background-color: rgba(255, 255, 255, 0.4)")
         self.gridLayout_2 = QGridLayout(self.widget_effect_config)
@@ -323,16 +337,42 @@ class Ui_MainWidget(object):
 
         self.horizontalLayout.addWidget(self.label_condition_name)
 
+        self.widget_output = QWidget(MainWidget)
+        self.widget_output.setObjectName(u"widget_output")
+        self.widget_output.setGeometry(QRect(10, 230, 201, 111))
+        self.widget_output.setFont(font)
+        self.widget_output.setAutoFillBackground(False)
+        self.widget_output.setStyleSheet(u"background-color: rgba(255, 255, 255, 0.4)")
+        self.gridLayout_4 = QGridLayout(self.widget_output)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.label = QLabel(self.widget_output)
+        self.label.setObjectName(u"label")
+
+        self.gridLayout_4.addWidget(self.label, 0, 0, 1, 2)
+
+        self.radioButton_out_name = QRadioButton(self.widget_output)
+        self.radioButton_out_name.setObjectName(u"radioButton_out_name")
+        self.radioButton_out_name.setChecked(False)
+
+        self.gridLayout_4.addWidget(self.radioButton_out_name, 1, 0, 1, 2)
+
+        self.radioButton_out_num = QRadioButton(self.widget_output)
+        self.radioButton_out_num.setObjectName(u"radioButton_out_num")
+        self.radioButton_out_num.setChecked(True)
+
+        self.gridLayout_4.addWidget(self.radioButton_out_num, 2, 0, 1, 2)
+
 
         self.retranslateUi(MainWidget)
         self.button_select_src.clicked.connect(MainWidget.select_src)
         self.button_select_target.clicked.connect(MainWidget.select_target)
         self.button_detect.clicked.connect(MainWidget.video_process)
 
-        self.comboBox_bitrate.setCurrentIndex(3)
+        self.comboBox_bitrate.setCurrentIndex(5)
         self.comboBox_scale.setCurrentIndex(0)
         self.comboBox_audio_bitrate.setCurrentIndex(1)
         self.comboBox_preset.setCurrentIndex(3)
+        self.comboBox_bitrate_encode.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWidget)
@@ -347,6 +387,7 @@ class Ui_MainWidget(object):
         self.comboBox_mode.setItemText(0, QCoreApplication.translate("MainWidget", u"1080p\u9ed8\u8ba4", None))
         self.comboBox_mode.setItemText(1, QCoreApplication.translate("MainWidget", u"720p\u9ed8\u8ba4", None))
 
+        self.label_scale.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u5c3a\u5bf8", None))
         self.comboBox_bitrate.setItemText(0, QCoreApplication.translate("MainWidget", u"1000kbps", None))
         self.comboBox_bitrate.setItemText(1, QCoreApplication.translate("MainWidget", u"2000kbps", None))
         self.comboBox_bitrate.setItemText(2, QCoreApplication.translate("MainWidget", u"3000kbps", None))
@@ -358,22 +399,21 @@ class Ui_MainWidget(object):
         self.comboBox_bitrate.setItemText(8, QCoreApplication.translate("MainWidget", u"9000kbps", None))
         self.comboBox_bitrate.setItemText(9, QCoreApplication.translate("MainWidget", u"10000kbps", None))
 
-        self.comboBox_bitrate.setCurrentText(QCoreApplication.translate("MainWidget", u"4000kbps", None))
+        self.comboBox_bitrate.setCurrentText(QCoreApplication.translate("MainWidget", u"6000kbps", None))
         self.label_bitrate.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u6bd4\u7279\u7387", None))
-        self.label_scale.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u5c3a\u5bf8", None))
         self.label_config.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u53c2\u6570\u8bbe\u7f6e", None))
+        self.label_target_path.setText(QCoreApplication.translate("MainWidget", u"\u9009\u62e9\u8f93\u51fa\u8def\u5f84:", None))
+        self.label_audio_bitrate.setText(QCoreApplication.translate("MainWidget", u"\u97f3\u9891\u6bd4\u7279\u7387", None))
+        self.label_src_path.setText(QCoreApplication.translate("MainWidget", u"\u9009\u62e9\u89c6\u9891\u8def\u5f84:", None))
         self.comboBox_scale.setItemText(0, QCoreApplication.translate("MainWidget", u"1920\u00d71080", None))
         self.comboBox_scale.setItemText(1, QCoreApplication.translate("MainWidget", u"1280\u00d7720", None))
 
-        self.label_src_path.setText(QCoreApplication.translate("MainWidget", u"\u9009\u62e9\u89c6\u9891\u8def\u5f84:", None))
-        self.label_target_path.setText(QCoreApplication.translate("MainWidget", u"\u9009\u62e9\u8f93\u51fa\u8def\u5f84:", None))
-        self.label_audio_bitrate.setText(QCoreApplication.translate("MainWidget", u"\u97f3\u9891\u6bd4\u7279\u7387", None))
+        self.label_audio_codec.setText(QCoreApplication.translate("MainWidget", u"\u97f3\u9891\u7f16\u7801\u683c\u5f0f", None))
         self.comboBox_audio_bitrate.setItemText(0, QCoreApplication.translate("MainWidget", u"128k", None))
         self.comboBox_audio_bitrate.setItemText(1, QCoreApplication.translate("MainWidget", u"192k", None))
         self.comboBox_audio_bitrate.setItemText(2, QCoreApplication.translate("MainWidget", u"256k", None))
         self.comboBox_audio_bitrate.setItemText(3, QCoreApplication.translate("MainWidget", u"512k", None))
 
-        self.label_audio_codec.setText(QCoreApplication.translate("MainWidget", u"\u97f3\u9891\u7f16\u7801\u683c\u5f0f", None))
         self.comboBox_audio_codec.setItemText(0, QCoreApplication.translate("MainWidget", u"aac", None))
         self.comboBox_audio_codec.setItemText(1, QCoreApplication.translate("MainWidget", u"ogg", None))
         self.comboBox_audio_codec.setItemText(2, QCoreApplication.translate("MainWidget", u"mp3", None))
@@ -388,6 +428,10 @@ class Ui_MainWidget(object):
         self.comboBox_preset.setItemText(6, QCoreApplication.translate("MainWidget", u"slow", None))
         self.comboBox_preset.setItemText(7, QCoreApplication.translate("MainWidget", u"slower", None))
         self.comboBox_preset.setItemText(8, QCoreApplication.translate("MainWidget", u"veryslow", None))
+
+        self.label_bitrate_encode.setText(QCoreApplication.translate("MainWidget", u"\u6bd4\u7279\u7387\u7f16\u7801\u683c\u5f0f", None))
+        self.comboBox_bitrate_encode.setItemText(0, QCoreApplication.translate("MainWidget", u"CBR4.1", None))
+        self.comboBox_bitrate_encode.setItemText(1, QCoreApplication.translate("MainWidget", u"VBR", None))
 
         self.label_video_fade_time.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u9000\u51fa\u6e10\u9690\u65f6\u95f4", None))
         self.label_audio_fade_time.setText(QCoreApplication.translate("MainWidget", u"\u9000\u51fa\u97f3\u9891\u6e10\u9690\u65f6\u95f4", None))
@@ -404,5 +448,8 @@ class Ui_MainWidget(object):
         self.doubleSpinBox_scale_size.setSuffix(QCoreApplication.translate("MainWidget", u"%", None))
         self.label_condition.setText(QCoreApplication.translate("MainWidget", u"\u89c6\u9891\u5904\u7406\u8fdb\u5ea6", None))
         self.label_condition_name.setText(QCoreApplication.translate("MainWidget", u"\u5f85\u5f00\u59cb", None))
+        self.label.setText(QCoreApplication.translate("MainWidget", u"\u8f93\u51fa\u8bbe\u7f6e", None))
+        self.radioButton_out_name.setText(QCoreApplication.translate("MainWidget", u"\u539f\u89c6\u9891\u540d+\u5e8f\u53f7", None))
+        self.radioButton_out_num.setText(QCoreApplication.translate("MainWidget", u"\u5e8f\u53f7", None))
     # retranslateUi
 

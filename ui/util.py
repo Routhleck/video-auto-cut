@@ -39,11 +39,14 @@ def get_para(ui):
         7: 'slower',
         8: 'veryslow'
     }
-    indextest = ui.comboBox_scale.currentIndex()
-    texttest = ui.comboBox_scale.currentText()
+    bitrate_encode_dict = {
+        0: 'CBR4.1',
+        1: 'VBR'
+    }
     video_scale = video_scale_dict[ui.comboBox_scale.currentIndex()]
     video_bitrate = video_bitrate_dict[ui.comboBox_bitrate.currentIndex()]
     audio_bitrate = audio_bitrate_dict[ui.comboBox_audio_bitrate.currentIndex()]
     audio_codec = audio_codec_dict[ui.comboBox_audio_codec.currentIndex()]
     preset = preset_dict[ui.comboBox_preset.currentIndex()]
-    return video_scale, video_bitrate, audio_bitrate, audio_codec, preset
+    bitrate_encode = bitrate_encode_dict[ui.comboBox_bitrate_encode.currentIndex()]
+    return video_scale, video_bitrate, audio_bitrate, audio_codec, preset, bitrate_encode
