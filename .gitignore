@@ -1,4 +1,7 @@
-
+dist/
+requirement/
+temp/
+cut_video/
 cut_video/32集_9.mp4
 cut_video/32集_8.mp4
 cut_video/32集_7.mp4
