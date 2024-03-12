@@ -466,7 +466,7 @@ def scene_cut_single(src_path,
             # video.save_frame(target_path + '/' + src_name + '_' + str(i) + '.jpg', t=random_time / 10)
 
             # 将视频拉伸至16:9
-            video = video.fx(fx_resize(), height=1080, width=1920)
+            video = video.fx(fx_resize, height=1080, width=1920)
             # 画面等比放大105%
             video = video.fx(fx_resize, resize_value)
             save_cover(False, video, target_path, src_name + '_' + str(i))
