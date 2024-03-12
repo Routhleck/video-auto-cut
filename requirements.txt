@@ -1,0 +1,14 @@
+pyside6~=6.6.2
+scenedetect~=0.6.3
+opencv-python~=4.6.0.66
+moviepy~=1.0.3
+spleeter~=2.4.0
+pydub~=0.25.1
+deepface~=0.0.86
+paddleocr~=2.7.0.3
+paddlepaddle
+numpy~=1.26.4
+tqdm~=4.66.2
+click==8.0.4
+typer==0.4.0
+protobuf==3.20.0
